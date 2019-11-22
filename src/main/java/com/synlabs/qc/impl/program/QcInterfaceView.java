@@ -1,7 +1,9 @@
-package com.synlabs.qc.impl;
+package com.synlabs.qc.impl.program;
+
 
 import com.synlabs.qc.impl.common.Service;
-import com.synlabs.qc.impl.style.Style;
+import com.synlabs.qc.impl.program.ColorImagePanel;
+import com.synlabs.qc.impl.program.ImagePanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.*;
+import java.net.Socket;
 
 
 public class QcInterfaceView {
@@ -45,6 +48,7 @@ public class QcInterfaceView {
     private String x, s, task;
     private JPanel panel;
     private JTextField textField;
+    public Socket client;
 
     //Frame
     private JFrame frame;
@@ -56,7 +60,7 @@ public class QcInterfaceView {
 
     public QcInterfaceView() {
         // TODO Auto-generated constructor stub
-        service = new Service();
+       // service = new Service();
     }
 
 
@@ -70,6 +74,14 @@ public class QcInterfaceView {
 //        //quality.ocrFrame();
 //
 //    }
+
+
+    public void socket() throws IOException {
+
+        client = new Socket("localhost", 3001);
+        System.out.println("Just connected to " + client.getRemoteSocketAddress());
+
+    }
 
     //Main frame
 
@@ -165,7 +177,7 @@ public class QcInterfaceView {
 
     //color Frame
     public void colorFrame() {
-        System.out.println("frame"+service.client);
+        System.out.println("frame" + service.client);
         task = "RUN|CLR";
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         frame = new JFrame("Color");
@@ -329,6 +341,11 @@ public class QcInterfaceView {
         stopb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+//                try {
+//                    service.socket();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 sendStop();
 
             }
@@ -344,12 +361,18 @@ public class QcInterfaceView {
         });
 
 
-        panel.add(sliderHu);panel.add(sliderHl);
-        panel.add(sliderSu);panel.add(sliderSl);
-        panel.add(sliderLu);panel.add(sliderLl);
-        panel.add(label2);panel.add(label3);
-        panel.add(label4);panel.add(label5);
-        panel.add(label6);panel.add(label7);
+        panel.add(sliderHu);
+        panel.add(sliderHl);
+        panel.add(sliderSu);
+        panel.add(sliderSl);
+        panel.add(sliderLu);
+        panel.add(sliderLl);
+        panel.add(label2);
+        panel.add(label3);
+        panel.add(label4);
+        panel.add(label5);
+        panel.add(label6);
+        panel.add(label7);
         panel.add(send);
         panel.add(textField);
         panel.add(location);

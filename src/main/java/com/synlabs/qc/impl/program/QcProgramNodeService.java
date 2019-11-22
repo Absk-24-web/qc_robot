@@ -1,7 +1,6 @@
-package com.synlabs.qc.impl;
+package com.synlabs.qc.impl.program;
 
 
-import com.synlabs.qc.impl.QcProgramNodeView;
 import com.synlabs.qc.impl.style.Style;
 import com.synlabs.qc.impl.style.V3Style;
 import com.synlabs.qc.impl.style.V5Style;

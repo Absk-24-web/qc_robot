@@ -1,6 +1,5 @@
-package com.synlabs.qc.impl;
+package com.synlabs.qc.impl.program;
 
-import com.synlabs.qc.impl.common.Service;
 import com.synlabs.qc.impl.style.Style;
 import com.ur.urcap.api.contribution.ContributionProvider;
 import com.ur.urcap.api.contribution.program.swing.SwingProgramNodeView;
@@ -10,7 +9,6 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 
 public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeContribution> {
@@ -27,13 +25,13 @@ public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeCont
     private QcProgramNodeContribution qcProgramNodeContribution;
     private QcInterfaceView view;
     private Style style;
-    private Service service;
+    //private Service service;
 
 
     public QcProgramNodeView(Style style) {
         this.style = style;
         view = new QcInterfaceView();
-        service = new Service();
+        //service = new Service();
     }
 
 
@@ -183,11 +181,11 @@ public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeCont
         connectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                try {
-                    service.socket();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                   // service.socket();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
 

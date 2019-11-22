@@ -1,6 +1,5 @@
-package com.synlabs.qc.impl;
+package com.synlabs.qc.impl.program;
 
-import com.synlabs.qc.impl.QcProgramNodeView;
 import com.ur.urcap.api.contribution.ProgramNodeContribution;
 import com.ur.urcap.api.contribution.program.ProgramAPIProvider;
 import com.ur.urcap.api.domain.URCapAPI;

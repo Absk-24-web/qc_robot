@@ -1,4 +1,4 @@
-package com.synlabs.qc.impl;
+package com.synlabs.qc.impl.program;
 
 import javax.swing.*;
 import java.awt.*;

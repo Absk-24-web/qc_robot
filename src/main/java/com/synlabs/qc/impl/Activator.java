@@ -1,6 +1,7 @@
 package com.synlabs.qc.impl;
 
 import com.synlabs.qc.impl.installation.QcInstallationNodeService;
+import com.synlabs.qc.impl.program.QcProgramNodeService;
 import com.ur.urcap.api.contribution.installation.swing.SwingInstallationNodeService;
 import com.ur.urcap.api.contribution.program.swing.SwingProgramNodeService;
 import org.osgi.framework.BundleActivator;
@@ -17,7 +18,7 @@ public class Activator implements BundleActivator {
 		QcInstallationNodeService qcInstallationNodeService = new QcInstallationNodeService();
 
 		bundleContext.registerService(SwingInstallationNodeService.class, qcInstallationNodeService, null);
-		bundleContext.registerService(SwingProgramNodeService.class, new QcProgramNodeService(), null);
+		bundleContext.registerService(SwingProgramNodeService.class,qcProgramNodeService, null);
 		System.out.println("Qc");
 	}
 
