@@ -1,5 +1,6 @@
 package com.synlabs.qc.impl.installation;
 
+import com.synlabs.qc.impl.program.QcInterfaceView;
 import com.synlabs.qc.impl.common.Service;
 import com.synlabs.qc.impl.style.Style;
 import com.ur.urcap.api.contribution.installation.swing.SwingInstallationNodeView;
@@ -23,11 +24,13 @@ public class QcInstallationNodeView implements SwingInstallationNodeView<QcInsta
     private JLabel status;
     public JTextField pointsText;
     public JPanel panel;
+    private QcInterfaceView view1;
 
 
     public QcInstallationNodeView(Style style) {
         this.style = style;
-        service = new Service();
+        //service = new Service();
+        view1 = new QcInterfaceView();
     }
 
 
@@ -51,7 +54,8 @@ public class QcInstallationNodeView implements SwingInstallationNodeView<QcInsta
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    service.socket();
+                  // QcInterfaceView view = new QcInterfaceView();
+                   view1.socket();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
