@@ -6,7 +6,7 @@ import java.net.Socket;
 public class Service {
 
 
-    public Socket client;
+    private Socket client;
 
     public Service() {
 
@@ -14,10 +14,16 @@ public class Service {
 
     public void socket() throws IOException {
 
-        client = new Socket("localhost", 3001);
-        System.out.println("Just connected to " + client.getRemoteSocketAddress());
+        setClient(new Socket("localhost", 3001));
+        System.out.println("Just connected to " + getClient().getRemoteSocketAddress());
 
     }
 
+    public Socket getClient() {
+        return client;
+    }
 
+    public void setClient(Socket client) {
+        this.client = client;
+    }
 }

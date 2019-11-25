@@ -28,10 +28,10 @@ public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeCont
     //private Service service;
 
 
-    public QcProgramNodeView(Style style) {
+    public QcProgramNodeView(Style style, Parent parent) {
         this.style = style;
-        view = new QcInterfaceView();
-        //service = new Service();
+        //view = parent.view;
+
     }
 
 

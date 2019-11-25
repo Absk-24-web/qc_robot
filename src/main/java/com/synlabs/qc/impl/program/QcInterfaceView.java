@@ -2,9 +2,6 @@ package com.synlabs.qc.impl.program;
 
 
 import com.synlabs.qc.impl.common.Service;
-import com.synlabs.qc.impl.program.ColorImagePanel;
-import com.synlabs.qc.impl.program.ImagePanel;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -26,6 +23,7 @@ public class QcInterfaceView {
 
     //Classes
     private Service service;
+    private Parent parent;
     private ImagePanel imagePanel;
 
     // variable  for color
@@ -58,9 +56,9 @@ public class QcInterfaceView {
     private JFrame frame4;
 
 
-    public QcInterfaceView() {
+    public QcInterfaceView() throws IOException {
         // TODO Auto-generated constructor stub
-       // service = new Service();
+        //service = new Service();
     }
 
 
@@ -74,14 +72,6 @@ public class QcInterfaceView {
 //        //quality.ocrFrame();
 //
 //    }
-
-
-    public void socket() throws IOException {
-
-        client = new Socket("localhost", 3001);
-        System.out.println("Just connected to " + client.getRemoteSocketAddress());
-
-    }
 
     //Main frame
 
@@ -177,7 +167,7 @@ public class QcInterfaceView {
 
     //color Frame
     public void colorFrame() {
-        System.out.println("frame" + service.client);
+        System.out.println("frame"+ service.getClient());
         task = "RUN|CLR";
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         frame = new JFrame("Color");
@@ -312,13 +302,13 @@ public class QcInterfaceView {
             public void actionPerformed(ActionEvent actionEvent) {
                 if (s != null) {
                     try {
-                        output = new PrintWriter(new OutputStreamWriter(service.client.getOutputStream()), true);
+                        output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
                         output.println("TAKE|CLR|" + "{" + "\"LB\":" + s + "}");
                         JOptionPane.showMessageDialog(frame, "Successfully Send");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else if (service.client == null) {
+                } else if (service.getClient() == null) {
                     JOptionPane.showMessageDialog(frame, "Connection Error");
                 } else {
                     JOptionPane.showMessageDialog(frame, "Please make sure set the bounds");
@@ -440,10 +430,10 @@ public class QcInterfaceView {
                 float y = Float.parseFloat(x);
                 x = String.valueOf(y);
                 System.out.println(x);
-                if (service.client != null) {
+                if (service.getClient() != null) {
                     if (imagePanel.s != null && x != null && img != null) {
                         try {
-                            output = new PrintWriter(new OutputStreamWriter(service.client.getOutputStream()), true);
+                            output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
                             output.println("TAKE|PAT|" + "{" + "\"bBox\":" + imagePanel.s + "," + "\"confi\":" + x + "}");
                             JOptionPane.showMessageDialog(frame4, "Send Successfully");
                         } catch (IOException e) {
@@ -687,11 +677,11 @@ public class QcInterfaceView {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 x = txt.getText();
-                if (service.client != null) {
+                if (service.getClient() != null) {
                     try {
                         if (imagePanel.s1 != null) {
                             if (x != null) {
-                                output = new PrintWriter(new OutputStreamWriter(service.client.getOutputStream()), true);
+                                output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
                                 output.println("TAKE|OCR|" + "{" + "\"region\":" + "[" + imagePanel.s1 + "]" + "," + "\"text\":" + "\"" + x + "\"" + "}");
                                 JOptionPane.showMessageDialog(frame3, "Send Successfully");
                             }
@@ -812,12 +802,12 @@ public class QcInterfaceView {
     //Receive image from server
     private void getImage() {
         //send
-        System.out.println(service.client);
+        System.out.println(service.getClient());
 
-        if (service.client != null) {
+        if (service.getClient() != null) {
 
             try {
-                output = new PrintWriter(new OutputStreamWriter(service.client.getOutputStream()), true);
+                output = new PrintWriter(new OutputStreamWriter(parent.service.getClient().getOutputStream()), true);
                 output.println("SEND");
 
             } catch (
@@ -830,7 +820,7 @@ public class QcInterfaceView {
                 public void run() {
                     try {
 
-                        in = new InputStreamReader(service.client.getInputStream());
+                        in = new InputStreamReader(service.getClient().getInputStream());
                         int count = 0;
 
                         byte[] contents = new byte[MAX_SIZE];
@@ -898,9 +888,9 @@ public class QcInterfaceView {
     private void sendStop() {
         //send
         stop = true;
-        if (service.client != null) {
+        if (service.getClient() != null) {
             try {
-                output = new PrintWriter(new OutputStreamWriter(service.client.getOutputStream()), true);
+                output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
                 output.println("STOP");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -921,9 +911,9 @@ public class QcInterfaceView {
             case "RUN|BCR":
             case "RUN|OCR":
             case "RUN|CIR":
-                if (service.client != null) {
+                if (service.getClient() != null) {
                     try {
-                        output = new PrintWriter(new OutputStreamWriter(service.client.getOutputStream()), true);
+                        output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
                         output.println(task);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -935,7 +925,7 @@ public class QcInterfaceView {
                         @Override
                         public void run() {
                             try {
-                                in = new InputStreamReader(service.client.getInputStream());
+                                in = new InputStreamReader(service.getClient().getInputStream());
                                 int count = 0;
                                 String contents = "";
                                 boolean start = false;
@@ -981,10 +971,10 @@ public class QcInterfaceView {
 
 
     private void getColorImage() {
-        System.out.println(service.client);
-        if (service.client != null) {
+        System.out.println(service.getClient());
+        if (service.getClient() != null) {
             try {
-                output = new PrintWriter(new OutputStreamWriter(service.client.getOutputStream()), true);
+                output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
                 output.println("SEND");
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -994,7 +984,7 @@ public class QcInterfaceView {
                 @Override
                 public void run() {
                     try {
-                        in = new InputStreamReader(service.client.getInputStream());
+                        in = new InputStreamReader(service.getClient().getInputStream());
                         int count = 0;
                         byte[] contents = new byte[MAX_SIZE];
                         int idx = 0;
