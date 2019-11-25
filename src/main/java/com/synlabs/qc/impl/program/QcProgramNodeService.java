@@ -15,6 +15,15 @@ import com.ur.urcap.api.domain.data.DataModel;
 import java.util.Locale;
 
 public class QcProgramNodeService implements SwingProgramNodeService<QcProgramNodeContribution, QcProgramNodeView> {
+
+    public Parent parent;
+    public QcProgramNodeService(){
+
+    }
+    public QcProgramNodeService(Parent parent){
+        this.parent = parent;
+    }
+
     @Override
     public String getId() {
         return "Quality Check";
@@ -34,7 +43,7 @@ public class QcProgramNodeService implements SwingProgramNodeService<QcProgramNo
     public QcProgramNodeView createView(ViewAPIProvider apiProvider) {
         SystemAPI systemAPI = apiProvider.getSystemAPI();
         Style style = systemAPI.getSoftwareVersion().getMajorVersion()  >=5 ?  new V5Style() : new V3Style();
-        return new QcProgramNodeView(style);
+        return new QcProgramNodeView(style, this.parent);
     }
 
     @Override

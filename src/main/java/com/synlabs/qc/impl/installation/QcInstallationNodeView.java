@@ -1,11 +1,10 @@
 package com.synlabs.qc.impl.installation;
 
-import com.synlabs.qc.impl.program.QcInterfaceView;
 import com.synlabs.qc.impl.common.Service;
+import com.synlabs.qc.impl.program.Parent;
+import com.synlabs.qc.impl.program.QcInterfaceView;
 import com.synlabs.qc.impl.style.Style;
 import com.ur.urcap.api.contribution.installation.swing.SwingInstallationNodeView;
-
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -20,19 +19,20 @@ public class QcInstallationNodeView implements SwingInstallationNodeView<QcInsta
     private JButton windowConnectButton;
     private JButton windowCalibrationButton;
     private JPanel connectionStatusPanel = new JPanel();
-    private Service service;
     private JLabel status;
     public JTextField pointsText;
     public JPanel panel;
-    private QcInterfaceView view1;
+    private QcInterfaceView view;
+    public Parent parent;
 
 
-    public QcInstallationNodeView(Style style) {
+
+    public QcInstallationNodeView(Style style, Parent parent){
         this.style = style;
-        //service = new Service();
-        view1 = new QcInterfaceView();
-    }
+        this.parent = parent;
 
+       // view = new QcInterfaceView();
+    }
 
     @Override
     public void buildUI(JPanel panel, QcInstallationNodeContribution contribution) {
@@ -54,20 +54,13 @@ public class QcInstallationNodeView implements SwingInstallationNodeView<QcInsta
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                  // QcInterfaceView view = new QcInterfaceView();
-                   view1.socket();
+                    if(parent==null){
+                        parent = new Parent();
+                    }
+                    parent.service.socket();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                System.out.println("inst"+service.client);
-                if (service.client != null) {
-                    status.setText("Connected");
-                    System.out.println(service.client);
-                    windowCalibrationButton.setEnabled(true);
-                }else {
-                    JOptionPane.showMessageDialog(connectionStatusPanel, "Connection is not available");
-                }
-
             }
         });
         box.add(windowConnectButton);
@@ -192,9 +185,9 @@ public class QcInstallationNodeView implements SwingInstallationNodeView<QcInsta
         send.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if(service.client != null){
+                if(parent.service.getClient() != null){
                     try {
-                        PrintWriter  output = new PrintWriter(new OutputStreamWriter(service.client.getOutputStream()), true);
+                        PrintWriter  output = new PrintWriter(new OutputStreamWriter(parent.service.getClient().getOutputStream()), true);
                         output.println("TAKE|CALEB|"+contribution.s);
                     } catch (IOException e) {
                         e.printStackTrace();

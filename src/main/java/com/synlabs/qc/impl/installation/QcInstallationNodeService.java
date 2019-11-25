@@ -1,5 +1,6 @@
 package com.synlabs.qc.impl.installation;
 
+import com.synlabs.qc.impl.program.Parent;
 import com.synlabs.qc.impl.style.Style;
 import com.synlabs.qc.impl.style.V3Style;
 import com.synlabs.qc.impl.style.V5Style;
@@ -11,11 +12,18 @@ import com.ur.urcap.api.contribution.installation.swing.SwingInstallationNodeSer
 import com.ur.urcap.api.domain.SystemAPI;
 import com.ur.urcap.api.domain.data.DataModel;
 
+import java.io.IOException;
 import java.util.Locale;
 
 public class QcInstallationNodeService implements SwingInstallationNodeService<QcInstallationNodeContribution, QcInstallationNodeView> {
 
+    public Parent parent;
+    public QcInstallationNodeService(){
 
+    }
+    public QcInstallationNodeService(Parent parent){
+        this.parent= parent;
+    }
     @Override
     public void configureContribution(ContributionConfiguration configuration) {
     }
@@ -29,7 +37,7 @@ public class QcInstallationNodeService implements SwingInstallationNodeService<Q
     public QcInstallationNodeView createView(ViewAPIProvider apiProvider) {
         SystemAPI systemAPI = apiProvider.getSystemAPI();
         Style style = systemAPI.getSoftwareVersion().getMajorVersion() >= 5 ? new V5Style() : new V3Style();
-        return new QcInstallationNodeView(style);
+        return new QcInstallationNodeView(style, this.parent);
     }
 
     @Override
