@@ -8,35 +8,31 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.*;
-import java.net.Socket;
 
 
 public class QcInterfaceView {
 
     //Classes
-    private Service service;
     private Parent parent;
     private ImagePanel imagePanel;
+    private ColorImagePanel colorImagePanel;
+    private MyKeyboard myKeyboard;
 
     // variable  for color
     private Color color;
     private int Hu, Su, Lu, Hl, Sl, Ll;
-    private ColorImagePanel colorImagePanel;
     private BufferedImage img2;
     private float H, S, L;
     private JSlider sliderHl, sliderSl, sliderLl, sliderHu, sliderSu, sliderLu;
 
     private BufferedImage img;
     private final int MAX_SIZE = 10 * 1024 * 1024;
-    private JTextField confidencetxt;
+    public JTextField confidencetxt;
     private JTextField txt;
     private boolean stop;
     private boolean selected;
@@ -46,7 +42,6 @@ public class QcInterfaceView {
     private String x, s, task;
     private JPanel panel;
     private JTextField textField;
-    public Socket client;
 
     //Frame
     private JFrame frame;
@@ -56,17 +51,21 @@ public class QcInterfaceView {
     private JFrame frame4;
 
 
-    public QcInterfaceView() throws IOException {
+    public QcInterfaceView() {
         // TODO Auto-generated constructor stub
-        //service = new Service();
+
+
+    }
+    public QcInterfaceView(Parent parent){
+        this.parent = parent;
     }
 
 
 //    public static void main(String args[]) throws IOException {
 //            QcInterfaceView  qcInterfaceView = new QcInterfaceView();
-//        qcInterfaceView.mainFrame();
+//        //qcInterfaceView.mainFrame();
 //        //quality.colorFrame();
-//        //quality.patternFrame();
+//        qcInterfaceView.patternFrame();
 //        //quality.BarFrame();
 //        //quality. circleFrame();
 //        //quality.ocrFrame();
@@ -75,99 +74,100 @@ public class QcInterfaceView {
 
     //Main frame
 
-    public void mainFrame() {
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        JFrame frame = new JFrame("Main");
-        frame.setSize(new Dimension(500, 500));
-        frame.setLocation(d.width / 2 - frame.getSize().width / 2,
-                d.height / 2 - frame.getSize().height / 2);
-        frame.setLayout(null);
-
-        JPanel panel = new JPanel();
-        panel.setSize(new Dimension(500, 500));
-        panel.setLayout(new FlowLayout(10, 40, 50));
-
-
-        final JButton button = new JButton("Color");
-        button.setPreferredSize(new Dimension(150, 50));
-        button.setMaximumSize(button.getPreferredSize());
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                colorFrame();
-            }
-        });
-
-        JButton button1 = new JButton("Circle");
-        button1.setPreferredSize(new Dimension(150, 50));
-        button1.setMaximumSize(button.getPreferredSize());
-        button1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                circleFrame();
-            }
-        });
-
-        JButton button2 = new JButton("Bar");
-        button2.setPreferredSize(new Dimension(150, 50));
-        button2.setMaximumSize(button.getPreferredSize());
-        button2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                barFrame();
-            }
-        });
-
-        JButton button3 = new JButton("Pattern");
-        button3.setPreferredSize(new Dimension(150, 50));
-        button3.setMaximumSize(button.getPreferredSize());
-        button3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                patternFrame();
-            }
-        });
-
-        JButton button4 = new JButton("OCR");
-        button4.setPreferredSize(new Dimension(150, 50));
-        button4.setMaximumSize(button.getPreferredSize());
-        button4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                ocrFrame();
-            }
-        });
-
-        JButton connect = new JButton("Connect");
-        connect.setPreferredSize(new Dimension(150, 50));
-        connect.setMaximumSize(button.getPreferredSize());
-        connect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                try {
-                    service.socket();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-
-        panel.add(button);
-        panel.add(button1);
-        panel.add(button2);
-        panel.add(button3);
-        panel.add(button4);
-        panel.add(connect);
-        frame.add(panel);
-        frame.setVisible(true);
-        frame.setEnabled(true);
-    }
+//    public void mainFrame() {
+//        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+//        JFrame frame = new JFrame("Main");
+//        frame.setSize(new Dimension(500, 500));
+//        frame.setLocation(d.width / 2 - frame.getSize().width / 2,
+//                d.height / 2 - frame.getSize().height / 2);
+//        frame.setLayout(null);
+//
+//        JPanel panel = new JPanel();
+//        panel.setSize(new Dimension(500, 500));
+//        panel.setLayout(new FlowLayout(10, 40, 50));
+//
+//
+//        final JButton button = new JButton("Color");
+//        button.setPreferredSize(new Dimension(150, 50));
+//        button.setMaximumSize(button.getPreferredSize());
+//        button.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent actionEvent) {
+//                colorFrame();
+//            }
+//        });
+//
+//        JButton button1 = new JButton("Circle");
+//        button1.setPreferredSize(new Dimension(150, 50));
+//        button1.setMaximumSize(button.getPreferredSize());
+//        button1.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent actionEvent) {
+//                circleFrame();
+//            }
+//        });
+//
+//        JButton button2 = new JButton("Bar");
+//        button2.setPreferredSize(new Dimension(150, 50));
+//        button2.setMaximumSize(button.getPreferredSize());
+//        button2.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent actionEvent) {
+//                barFrame();
+//            }
+//        });
+//
+//        JButton button3 = new JButton("Pattern");
+//        button3.setPreferredSize(new Dimension(150, 50));
+//        button3.setMaximumSize(button.getPreferredSize());
+//        button3.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent actionEvent) {
+//                patternFrame();
+//            }
+//        });
+//
+//        JButton button4 = new JButton("OCR");
+//        button4.setPreferredSize(new Dimension(150, 50));
+//        button4.setMaximumSize(button.getPreferredSize());
+//        button4.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent actionEvent) {
+//                ocrFrame();
+//            }
+//        });
+//
+//        JButton connect = new JButton("Connect");
+//        connect.setPreferredSize(new Dimension(150, 50));
+//        connect.setMaximumSize(button.getPreferredSize());
+//        connect.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent actionEvent) {
+//                try {
+//                    parent.service.socket();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//
+//        panel.add(button);
+//        panel.add(button1);
+//        panel.add(button2);
+//        panel.add(button3);
+//        panel.add(button4);
+//        panel.add(connect);
+//        frame.add(panel);
+//        frame.setVisible(true);
+//        frame.setEnabled(true);
+//    }
 
 
     //color Frame
     public void colorFrame() {
-        System.out.println("frame"+ service.getClient());
+        //System.out.println("frame"+ parent.service.getClient());
+       // System.out.println("frame dir"+ parent.service.client);
         task = "RUN|CLR";
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         frame = new JFrame("Color");
@@ -302,13 +302,13 @@ public class QcInterfaceView {
             public void actionPerformed(ActionEvent actionEvent) {
                 if (s != null) {
                     try {
-                        output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
+                        output = new PrintWriter(new OutputStreamWriter(parent.service.getClient().getOutputStream()), true);
                         output.println("TAKE|CLR|" + "{" + "\"LB\":" + s + "}");
                         JOptionPane.showMessageDialog(frame, "Successfully Send");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else if (service.getClient() == null) {
+                } else if (parent.service.getClient() == null) {
                     JOptionPane.showMessageDialog(frame, "Connection Error");
                 } else {
                     JOptionPane.showMessageDialog(frame, "Please make sure set the bounds");
@@ -331,11 +331,6 @@ public class QcInterfaceView {
         stopb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-//                try {
-//                    service.socket();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
                 sendStop();
 
             }
@@ -380,7 +375,7 @@ public class QcInterfaceView {
     //pattern frame
     public void patternFrame() {
         task = "RUN|PAT";
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        final Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         frame4 = new JFrame("Pattern Matching");
         frame4.setLayout(null);
         frame4.setResizable(false);
@@ -430,10 +425,10 @@ public class QcInterfaceView {
                 float y = Float.parseFloat(x);
                 x = String.valueOf(y);
                 System.out.println(x);
-                if (service.getClient() != null) {
+                if (parent.service.getClient() != null) {
                     if (imagePanel.s != null && x != null && img != null) {
                         try {
-                            output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
+                            output = new PrintWriter(new OutputStreamWriter(parent.service.getClient().getOutputStream()), true);
                             output.println("TAKE|PAT|" + "{" + "\"bBox\":" + imagePanel.s + "," + "\"confi\":" + x + "}");
                             JOptionPane.showMessageDialog(frame4, "Send Successfully");
                         } catch (IOException e) {
@@ -450,11 +445,18 @@ public class QcInterfaceView {
         });
 
 
-        JLabel confidence = new JLabel("Confidence:");
+        final JLabel confidence = new JLabel("Confidence:");
         confidence.setBounds(650, 190, 90, 30);
 
+        final QcInterfaceView self = this;
         confidencetxt = new JTextField();
         confidencetxt.setBounds(650, 230, 90, 30);
+        confidencetxt.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                myKeyboard = new MyKeyboard(self);
+            }
+        });
 
         JButton run = new JButton("Run");
         run.setBounds(300, 490, 70, 30);
@@ -677,11 +679,11 @@ public class QcInterfaceView {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 x = txt.getText();
-                if (service.getClient() != null) {
+                if (parent.service.getClient() != null) {
                     try {
                         if (imagePanel.s1 != null) {
                             if (x != null) {
-                                output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
+                                output = new PrintWriter(new OutputStreamWriter(parent.service.getClient().getOutputStream()), true);
                                 output.println("TAKE|OCR|" + "{" + "\"region\":" + "[" + imagePanel.s1 + "]" + "," + "\"text\":" + "\"" + x + "\"" + "}");
                                 JOptionPane.showMessageDialog(frame3, "Send Successfully");
                             }
@@ -700,9 +702,18 @@ public class QcInterfaceView {
 
         JLabel text = new JLabel("Text:");
         text.setBounds(680, 190, 90, 30);
-
+        final QcInterfaceView self = this;
         txt = new JTextField();
         txt.setBounds(650, 220, 100, 30);
+        txt.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+              myKeyboard = new MyKeyboard(self);
+
+            }
+        });
+
+
 
         checkBox = new JCheckBox();
         checkBox.setBounds(650, 270, 100, 30);
@@ -750,14 +761,7 @@ public class QcInterfaceView {
         run.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                try {
-                    service.socket();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                //sendRunGetInformation();
-
-
+                sendRunGetInformation();
             }
         });
 
@@ -802,9 +806,8 @@ public class QcInterfaceView {
     //Receive image from server
     private void getImage() {
         //send
-        System.out.println(service.getClient());
-
-        if (service.getClient() != null) {
+        System.out.println(parent.service.getClient());
+        if (parent.service.getClient() != null) {
 
             try {
                 output = new PrintWriter(new OutputStreamWriter(parent.service.getClient().getOutputStream()), true);
@@ -820,7 +823,7 @@ public class QcInterfaceView {
                 public void run() {
                     try {
 
-                        in = new InputStreamReader(service.getClient().getInputStream());
+                        in = new InputStreamReader(parent.service.getClient().getInputStream());
                         int count = 0;
 
                         byte[] contents = new byte[MAX_SIZE];
@@ -888,9 +891,9 @@ public class QcInterfaceView {
     private void sendStop() {
         //send
         stop = true;
-        if (service.getClient() != null) {
+        if (parent.service.getClient() != null) {
             try {
-                output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
+                output = new PrintWriter(new OutputStreamWriter(parent.service.getClient().getOutputStream()), true);
                 output.println("STOP");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -905,76 +908,71 @@ public class QcInterfaceView {
     private void sendRunGetInformation() {
         //send
         stop = false;
-        switch (task) {
-            case "RUN|PAT":
-            case "RUN|CLR":
-            case "RUN|BCR":
-            case "RUN|OCR":
-            case "RUN|CIR":
-                if (service.getClient() != null) {
-                    try {
-                        output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
-                        output.println(task);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    //receive in new thread
-                    Thread readMessage = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                in = new InputStreamReader(service.getClient().getInputStream());
-                                int count = 0;
-                                String contents = "";
-                                boolean start = false;
-                                do {
-                                    if (stop == true) {
-                                        break;
-                                    }
-                                    int ch = 0;
-                                    ch = in.read();
-
-                                    if (ch == -1) {
-                                        System.out.print("return");
-                                        return;
-                                    }
-
-                                    if (start) {
-                                        if (ch == '|') {
-                                            System.out.println("Location: " + contents);//displayLocation()
-                                            textField.setText(contents);
-                                            contents = "";
-                                        } else {
-                                            char c = (char) ch;
-                                            contents = contents + c;
-                                        }
-                                    }
-                                    if (ch == '|') {
-                                        start = !start;
-                                    }
-                                } while (true);
-                                //System.out.println("Exited");
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    readMessage.start();
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Please make sure the connection is connected");
+        if ("RUN|PAT".equals(task) || "RUN|CLR".equals(task) || "RUN|BCR".equals(task) || "RUN|OCR".equals(task) || "RUN|CIR".equals(task)) {
+            if (parent.service.getClient() != null) {
+                try {
+                    output = new PrintWriter(new OutputStreamWriter(parent.service.getClient().getOutputStream()), true);
+                    output.println(task);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
+
+                //receive in new thread
+                Thread readMessage = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            in = new InputStreamReader(parent.service.getClient().getInputStream());
+                            int count = 0;
+                            String contents = "";
+                            boolean start = false;
+                            do {
+                                if (stop == true) {
+                                    break;
+                                }
+                                int ch = 0;
+                                ch = in.read();
+
+                                if (ch == -1) {
+                                    System.out.print("return");
+                                    return;
+                                }
+
+                                if (start) {
+                                    if (ch == '|') {
+                                        System.out.println("Location: " + contents);//displayLocation()
+                                        textField.setText(contents);
+                                        contents = "";
+                                    } else {
+                                        char c = (char) ch;
+                                        contents = contents + c;
+                                    }
+                                }
+                                if (ch == '|') {
+                                    start = !start;
+                                }
+                            } while (true);
+                            //System.out.println("Exited");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                readMessage.start();
+            } else {
+                JOptionPane.showMessageDialog(frame, "Please make sure the connection is connected");
+            }
         }
 
     }
 
 
     private void getColorImage() {
-        System.out.println(service.getClient());
-        if (service.getClient() != null) {
+        System.out.println(parent.service.getClient());
+        if (parent.service.getClient() != null) {
             try {
-                output = new PrintWriter(new OutputStreamWriter(service.getClient().getOutputStream()), true);
+                output = new PrintWriter(new OutputStreamWriter(parent.service.getClient().getOutputStream()), true);
                 output.println("SEND");
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -984,7 +982,7 @@ public class QcInterfaceView {
                 @Override
                 public void run() {
                     try {
-                        in = new InputStreamReader(service.getClient().getInputStream());
+                        in = new InputStreamReader(parent.service.getClient().getInputStream());
                         int count = 0;
                         byte[] contents = new byte[MAX_SIZE];
                         int idx = 0;
@@ -1048,6 +1046,9 @@ public class QcInterfaceView {
     }
 
     private void changeEvent() {
+        Thread change= new Thread(new Runnable() {
+            @Override
+            public void run() {
         img = deepCopy(img2);
         colorImagePanel.image = deepCopy(img2);
         for (int x = 0; x < colorImagePanel.image.getWidth(); x++) {
@@ -1077,6 +1078,10 @@ public class QcInterfaceView {
         Hu = Hu / 2;
 
         s = ("[" + Hl + "," + Ll + "," + Sl + "]" + "," + "\"UB\":" + "[" + Hu + "," + Lu + "," + Su + "]");
+            }
+
+        });
+        change.start();
 
     }
 

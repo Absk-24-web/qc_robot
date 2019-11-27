@@ -31,7 +31,6 @@ public class QcInstallationNodeView implements SwingInstallationNodeView<QcInsta
         this.style = style;
         this.parent = parent;
 
-       // view = new QcInterfaceView();
     }
 
     @Override
@@ -54,10 +53,14 @@ public class QcInstallationNodeView implements SwingInstallationNodeView<QcInsta
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if(parent==null){
-                        parent = new Parent();
-                    }
+                    //System.out.println(parent);
                     parent.service.socket();
+                    if (parent.service.getClient() != null){
+                        status.setText("Connected");
+                        windowCalibrationButton.setEnabled(true);
+                    }else {
+                        JOptionPane.showMessageDialog(createWindowPanelStatus(contribution), "Connection is not available");
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -188,7 +191,7 @@ public class QcInstallationNodeView implements SwingInstallationNodeView<QcInsta
                 if(parent.service.getClient() != null){
                     try {
                         PrintWriter  output = new PrintWriter(new OutputStreamWriter(parent.service.getClient().getOutputStream()), true);
-                        output.println("TAKE|CALEB|"+contribution.s);
+                        output.println("CALIB|"+contribution.s);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

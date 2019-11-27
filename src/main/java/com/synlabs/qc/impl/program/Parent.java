@@ -7,7 +7,6 @@ import com.synlabs.qc.impl.style.Style;
 import java.io.IOException;
 
 public class Parent {
-    public Style style;
     public Service service ;
 
 
