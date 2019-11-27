@@ -9,6 +9,10 @@ import com.ur.urcap.api.domain.URCapAPI;
 import com.ur.urcap.api.domain.data.DataModel;
 import com.ur.urcap.api.domain.script.ScriptWriter;
 import com.ur.urcap.api.domain.undoredo.UndoRedoManager;
+import com.ur.urcap.api.domain.userinteraction.robot.movement.MovementCompleteEvent;
+import com.ur.urcap.api.domain.userinteraction.robot.movement.RobotMovement;
+import com.ur.urcap.api.domain.userinteraction.robot.movement.RobotMovementCallback;
+import com.ur.urcap.api.domain.value.jointposition.JointPositions;
 
 import java.text.DecimalFormat;
 
@@ -23,6 +27,9 @@ public class QcInstallationNodeContribution implements InstallationNodeContribut
     private URCapAPI urCapAPI;
     private ProgramAPI api;
     private UndoRedoManager undoRedoManager;
+    private RobotMovement robotMovement;
+    private static final String TOOL_CHANGE_JOINT_POSITIONS = "joint-position";
+
 
 
 
@@ -31,6 +38,7 @@ public class QcInstallationNodeContribution implements InstallationNodeContribut
         this.urCapAPI = urCapAPI;
         this.view = view;
         this.api = api;
+        robotMovement = apiProvider.getUserInterfaceAPI().getUserInteraction().getRobotMovement();
 
     }
 
@@ -65,6 +73,36 @@ public class QcInstallationNodeContribution implements InstallationNodeContribut
         }
 
     }
+
+
+    public void moveTOPosition(){
+        robotMovement.requestUserToMoveRobot(getToolChangeJointPositions(), new RobotMovementCallback() {
+            @Override
+            public void onComplete(MovementCompleteEvent event) {
+
+            }
+        });
+    }
+
+    public JointPositions getToolChangeJointPositions() {
+        return model.get(TOOL_CHANGE_JOINT_POSITIONS, (JointPositions) null);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //    void addWaypointNode() {
 //        ProgramAPI programAPI = (ProgramAPI) api.getProgramModel();

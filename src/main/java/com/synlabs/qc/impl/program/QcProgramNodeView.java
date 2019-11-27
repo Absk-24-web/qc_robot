@@ -15,23 +15,19 @@ public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeCont
 
     private JPanel panel;
     private JPanel panel1;
+    private QcInterfaceView view;
     private JButton ocrButton;
     private JButton colorButton;
     private JButton barButton;
     private JButton circleButton;
     private JButton patternButton;
     private JButton connectButton;
-    public String task;
-    private QcProgramNodeContribution qcProgramNodeContribution;
-    private QcInterfaceView view;
     private Style style;
-    //private Service service;
 
 
     public QcProgramNodeView(Style style, Parent parent) {
         this.style = style;
-        //view = parent.view;
-
+        this.view = new QcInterfaceView(parent);
     }
 
 
@@ -41,7 +37,7 @@ public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeCont
 
         panel.add(createPanel(provider));
 
-        panel.add(createPanel1(provider));
+        panel.add(createButtonPanel(provider));
 
     }
 
@@ -65,7 +61,7 @@ public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeCont
         return box;
     }
 
-    private Box createPanel1(final ContributionProvider<QcProgramNodeContribution> provider) {
+    private Box createButtonPanel(final ContributionProvider<QcProgramNodeContribution> provider) {
         Box box = Box.createHorizontalBox();
         box.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel1 = new JPanel();
@@ -80,19 +76,8 @@ public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeCont
         panel1.add(patternButton(provider));
         panel1.add(circleButton(provider));
         panel1.add(connectButton(provider));
-        //panel1.add(createLabel(provider));
+
         box.add(panel1);
-        return box;
-    }
-
-    private Box createLabel(final ContributionProvider<QcProgramNodeContribution> provider) {
-        Box box = Box.createHorizontalBox();
-        box.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JLabel label = new JLabel("Connection Status:");
-        label.setPreferredSize(new Dimension(200, 30));
-        label.setMaximumSize(label.getPreferredSize());
-
-        box.add(label);
         return box;
     }
 
@@ -127,7 +112,7 @@ public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeCont
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.barFrame();
+               view.barFrame();
             }
         });
 
@@ -145,7 +130,7 @@ public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeCont
         patternButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                view.patternFrame();
+               view.patternFrame();
             }
         });
 
@@ -163,7 +148,7 @@ public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeCont
         ocrButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                view.ocrFrame();
+              view.ocrFrame();
             }
         });
 
@@ -203,12 +188,20 @@ public class QcProgramNodeView implements SwingProgramNodeView<QcProgramNodeCont
         circleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                view.circleFrame();
+               view.circleFrame();
             }
         });
 
         box.add(circleButton);
         return box;
+    }
+
+    private Component createHorizontalSpacing() {
+        return Box.createRigidArea(new Dimension(style.getHorizontalSpacing(), 0));
+    }
+
+    private Component createVerticalSpacing() {
+        return Box.createRigidArea(new Dimension(style.getVerticalSpacing(), 0));
     }
 
 
