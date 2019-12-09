@@ -63,6 +63,8 @@ public class QcInstallationNodeView implements SwingInstallationNodeView<QcInsta
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
+                    JOptionPane.showMessageDialog(createWindowPanelStatus(contribution), ex);
+
                 }
             }
         });

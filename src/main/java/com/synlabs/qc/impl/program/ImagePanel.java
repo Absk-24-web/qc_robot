@@ -20,6 +20,7 @@ public class ImagePanel extends JPanel {
     public void updateImage(BufferedImage img) {
         this.image = img;
         shape = null;
+        str = null;
         count =0;
     }
 

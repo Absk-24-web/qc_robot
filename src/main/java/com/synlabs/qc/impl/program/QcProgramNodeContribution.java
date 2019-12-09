@@ -6,21 +6,26 @@ import com.ur.urcap.api.domain.URCapAPI;
 import com.ur.urcap.api.domain.data.DataModel;
 import com.ur.urcap.api.domain.script.ScriptWriter;
 import com.ur.urcap.api.domain.userinteraction.robot.movement.MovementCompleteEvent;
-import com.ur.urcap.api.domain.userinteraction.robot.movement.MovementErrorEvent;
 import com.ur.urcap.api.domain.userinteraction.robot.movement.RobotMovement;
 import com.ur.urcap.api.domain.userinteraction.robot.movement.RobotMovementCallback;
 import com.ur.urcap.api.domain.value.Pose;
 import com.ur.urcap.api.domain.value.ValueFactoryProvider;
+import com.ur.urcap.api.domain.value.jointposition.JointPositions;
 import com.ur.urcap.api.domain.value.simple.Angle;
 import com.ur.urcap.api.domain.value.simple.Length;
 
+import javax.tools.Tool;
+
 public class QcProgramNodeContribution implements ProgramNodeContribution {
-    private static final String CENTER_POSITION = "center_pose";
-    private final RobotMovement robotMovement;
-    private final DataModel model;
-    private final ProgramAPIProvider apiProvider;
+
+    private  RobotMovement robotMovement;
+    private DataModel model;
+    private ProgramAPIProvider apiProvider;
     private QcProgramNodeView view;
     private URCapAPI urCapAPI;
+    private static final String TOOL_CHANGE_JOINT_POSITIONS = "joint-position";
+
+
 
     public QcProgramNodeContribution(ProgramAPIProvider apiProvider, QcProgramNodeView view, DataModel model) {
         this.model = model;
@@ -28,25 +33,10 @@ public class QcProgramNodeContribution implements ProgramNodeContribution {
         robotMovement = apiProvider.getUserInterfaceAPI().getUserInteraction().getRobotMovement();
     }
 
+    public QcProgramNodeContribution() {
 
-    public void moveRobot() {
-        //clearErrors();
-        Pose centerPose = model.get(CENTER_POSITION, (Pose) null);
-        if (centerPose != null) {
-            robotMovement.requestUserToMoveRobot(centerPose, new RobotMovementCallback() {
-
-                @Override
-                public void onComplete(MovementCompleteEvent event) {
-
-                }
-
-                @Override
-                public void onError(MovementErrorEvent event) {
-                    // updateError(new EllipseState(getErrorMessage(event.getErrorType())));
-                }
-            });
-        }
     }
+
 
     private Pose createPoseUsingCenterPoseAndOffset(Pose pose, double xOffset, double yOffset, double zOffset,
                                                     Length.Unit unit) {
@@ -61,7 +51,18 @@ public class QcProgramNodeContribution implements ProgramNodeContribution {
     }
 
 
+    public void moveTOPosition(){
+        robotMovement.requestUserToMoveRobot(getToolChangeJointPositions(), new RobotMovementCallback() {
+            @Override
+            public void onComplete(MovementCompleteEvent event) {
 
+            }
+        });
+    }
+
+    public JointPositions getToolChangeJointPositions() {
+        return model.get(TOOL_CHANGE_JOINT_POSITIONS, (JointPositions) null);
+    }
 
 
 
