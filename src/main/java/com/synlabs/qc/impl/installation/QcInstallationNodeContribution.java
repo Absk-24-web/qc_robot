@@ -1,5 +1,6 @@
 package com.synlabs.qc.impl.installation;
 
+import com.synlabs.qc.impl.common.Qc;
 import com.synlabs.qc.impl.common.RobotRealtimeReader;
 import com.ur.urcap.api.contribution.InstallationNodeContribution;
 import com.ur.urcap.api.contribution.installation.CreationContext;
@@ -10,10 +11,13 @@ import com.ur.urcap.api.domain.data.DataModel;
 import com.ur.urcap.api.domain.script.ScriptWriter;
 import com.ur.urcap.api.domain.undoredo.UndoRedoManager;
 import com.ur.urcap.api.domain.userinteraction.robot.movement.MovementCompleteEvent;
+import com.ur.urcap.api.domain.userinteraction.robot.movement.MovementErrorEvent;
 import com.ur.urcap.api.domain.userinteraction.robot.movement.RobotMovement;
 import com.ur.urcap.api.domain.userinteraction.robot.movement.RobotMovementCallback;
+import com.ur.urcap.api.domain.value.Pose;
 import com.ur.urcap.api.domain.value.jointposition.JointPositions;
 
+import java.awt.event.InputEvent;
 import java.text.DecimalFormat;
 
 
@@ -29,6 +33,9 @@ public class QcInstallationNodeContribution implements InstallationNodeContribut
     private UndoRedoManager undoRedoManager;
     private RobotMovement robotMovement;
     private static final String TOOL_CHANGE_JOINT_POSITIONS = "joint-position";
+    private float[] calibrationPoints = new float[12];
+    private static final String Position_KEY = "Position_Key";
+    private static final String Step_Position_KEY = "Step_Position_Key";
 
 
 
@@ -75,21 +82,26 @@ public class QcInstallationNodeContribution implements InstallationNodeContribut
     }
 
 
-    public void moveTOPosition(){
-        robotMovement.requestUserToMoveRobot(getToolChangeJointPositions(), new RobotMovementCallback() {
-            @Override
-            public void onComplete(MovementCompleteEvent event) {
-
-            }
-        });
-    }
-
-    public JointPositions getToolChangeJointPositions() {
-        return model.get(TOOL_CHANGE_JOINT_POSITIONS, (JointPositions) null);
-    }
 
 
 
+//    public void calibrateRobotAButtonEvent(InputEvent event) {
+//        if (event.getEventType() == EventType.ON_RELEASED) {
+//            try {
+//                Qc.Point3 point = this.getRobotCoordinate();
+//                this.calibrationPoints[0] = (float)point.getX() / 1000.0F;
+//                this.calibrationPoints[1] = (float)point.getY() / 1000.0F;
+//                this.calibrationPoints[2] = (float)point.getZ() / 1000.0F;
+//                this.qc.setAlignmentControlPoint(ControlPoint.A, point);
+//                //this.updateCalibrationButtons(InspectorInstallationNodeContribution.CalibrationStep.ALIGN_POINT_B);
+//            } catch (Exception var3) {
+//                //this.setErrorMessage("Calibration failed");
+//                //this.updateCalibrationButtons(InspectorInstallationNodeContribution.CalibrationStep.NOT_STARTED);
+//                var3.printStackTrace();
+//            }
+//        }
+//
+//    }
 
 
 
@@ -99,6 +111,28 @@ public class QcInstallationNodeContribution implements InstallationNodeContribut
 
 
 
+
+
+
+
+
+
+
+
+
+
+//    public void moveTOPosition(){
+//        robotMovement.requestUserToMoveRobot(getToolChangeJointPositions(), new RobotMovementCallback() {
+//            @Override
+//            public void onComplete(MovementCompleteEvent event) {
+//
+//            }
+//        });
+//    }
+//
+//    public JointPositions getToolChangeJointPositions() {
+//        return model.get(TOOL_CHANGE_JOINT_POSITIONS, (JointPositions) null);
+//    }
 
 
 
@@ -227,7 +261,20 @@ public class QcInstallationNodeContribution implements InstallationNodeContribut
 //    }
 
 
-
+    public void moveRobot() {
+        //Offs();
+        Pose OffsetPose = model.get(Step_Position_KEY, (Pose) null);
+        if (OffsetPose != null) {
+            robotMovement.requestUserToMoveRobot(OffsetPose, new RobotMovementCallback() {
+                @Override
+                public void onComplete(MovementCompleteEvent event) {
+                }
+                @Override
+                public void onError(MovementErrorEvent event) {
+                }
+            });
+        }
+    }
 
 
 
@@ -245,7 +292,10 @@ public class QcInstallationNodeContribution implements InstallationNodeContribut
 
     @Override
     public void generateScript(ScriptWriter writer) {
-
+        //writer.assign("CameraOffset", "p["+getX_Offs()+", "+getY_Offs()+", "+getZ_Offs()+", 0.0, 0.0, 0.0]");
+        writer.appendLine("Position = "+model.get(Position_KEY, (Pose) null));
+        writer.appendLine("movel(pose_trans(CameraOffset, Position)");
+           // writer.getResolvedVariableName(Plane_1);
     }
 
 

@@ -22,6 +22,7 @@ public class QcInterfaceView {
     private ImagePanel imagePanel;
     private ColorImagePanel colorImagePanel;
     private MyKeyboard myKeyboard;
+    private  QcProgramNodeContribution nodeContribution;
 
     // variable  for color
     private Color color;
@@ -33,7 +34,7 @@ public class QcInterfaceView {
     private BufferedImage img;
     private final int MAX_SIZE = 10 * 1024 * 1024;
     public JTextField confidencetxt;
-    private JTextField txt;
+    public JTextField txt;
     private boolean stop;
     private boolean selected;
     private JCheckBox checkBox;
@@ -42,6 +43,7 @@ public class QcInterfaceView {
     private String x, s, task;
     private JPanel panel;
     private JTextField textField;
+    private  boolean threadRunning =false;
 
     //Frame
     private JFrame frame;
@@ -53,6 +55,7 @@ public class QcInterfaceView {
 
     public QcInterfaceView() {
         // TODO Auto-generated constructor stub
+       // nodeContribution = new QcProgramNodeContribution();
 
 
     }
@@ -61,18 +64,18 @@ public class QcInterfaceView {
     }
 
 
-//    public static void main(String args[]) throws IOException {
-//            QcInterfaceView  qcInterfaceView = new QcInterfaceView();
-//        //qcInterfaceView.mainFrame();
-//        //quality.colorFrame();
-//        qcInterfaceView.patternFrame();
-//        //quality.BarFrame();
-//        //quality. circleFrame();
-//        //quality.ocrFrame();
-//
-//    }
+    public static void main(String args[]) throws IOException {
+            QcInterfaceView  qcInterfaceView = new QcInterfaceView();
+        qcInterfaceView.mainFrame();
+       //qcInterfaceView.colorFrame();
+        //qcInterfaceView.patternFrame();
+        //quality.BarFrame();
+        //quality. circleFrame();
+        //quality.ocrFrame();
 
-    //Main frame
+    }
+
+   // Main frame
 
 //    public void mainFrame() {
 //        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
@@ -143,11 +146,11 @@ public class QcInterfaceView {
 //        connect.addActionListener(new ActionListener() {
 //            @Override
 //            public void actionPerformed(ActionEvent actionEvent) {
-//                try {
-//                    parent.service.socket();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+//                    try {
+//                        parent.service.socket();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
 //            }
 //        });
 //
@@ -161,13 +164,11 @@ public class QcInterfaceView {
 //        frame.add(panel);
 //        frame.setVisible(true);
 //        frame.setEnabled(true);
-//    }
+    //
 
 
     //color Frame
     public void colorFrame() {
-        //System.out.println("frame"+ parent.service.getClient());
-       // System.out.println("frame dir"+ parent.service.client);
         task = "RUN|CLR";
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         frame = new JFrame("Color");
@@ -290,6 +291,7 @@ public class QcInterfaceView {
         getImage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                sliderHl = sliderHu = sliderLl = sliderLu =sliderSl = sliderSu = null;
                 getColorImage();
             }
 
@@ -311,7 +313,7 @@ public class QcInterfaceView {
                 } else if (parent.service.getClient() == null) {
                     JOptionPane.showMessageDialog(frame, "Connection Error");
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Please make sure set the bounds");
+                    JOptionPane.showMessageDialog(frame, "Please  set the bounds");
                 }
 
             }
@@ -322,6 +324,7 @@ public class QcInterfaceView {
         run.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+               // nodeContribution.moveTOPosition();
                 sendRunGetInformation();
             }
         });
@@ -438,7 +441,7 @@ public class QcInterfaceView {
                         JOptionPane.showMessageDialog(frame4, "Please make sure the parameter or confidence is set");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(frame4, "Please make sure the connection is connected");
+                    JOptionPane.showMessageDialog(frame4, " connection Error");
                 }
 
             }
@@ -454,7 +457,10 @@ public class QcInterfaceView {
         confidencetxt.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
+                final Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
                 myKeyboard = new MyKeyboard(self);
+                myKeyboard.setLocation(d.width / 2 - frame4.getSize().width / 2,
+                        d.height / 2 - frame4.getSize().height / 2);
             }
         });
 
@@ -614,6 +620,7 @@ public class QcInterfaceView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame2.dispose();
+                frame2.getDefaultCloseOperation();
             }
         });
 
@@ -694,7 +701,7 @@ public class QcInterfaceView {
                         e.printStackTrace();
                     }
                 } else {
-                    JOptionPane.showMessageDialog(frame3, "Please make sure the connection is connected ");
+                    JOptionPane.showMessageDialog(frame3, "connection Error ");
                 }
             }
         });
@@ -702,13 +709,17 @@ public class QcInterfaceView {
 
         JLabel text = new JLabel("Text:");
         text.setBounds(680, 190, 90, 30);
+
         final QcInterfaceView self = this;
         txt = new JTextField();
         txt.setBounds(650, 220, 100, 30);
         txt.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
-              myKeyboard = new MyKeyboard(self);
+                final Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+                myKeyboard = new MyKeyboard(self);
+                myKeyboard.setLocation(d.width / 2 - frame4.getSize().width / 2,
+                        d.height / 2 - frame4.getSize().height / 2);
 
             }
         });
@@ -761,6 +772,8 @@ public class QcInterfaceView {
         run.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+
+
                 sendRunGetInformation();
             }
         });
@@ -880,7 +893,7 @@ public class QcInterfaceView {
             });
             readImage2.start();
         } else {
-            JOptionPane.showMessageDialog(frame, "Connection is lost");
+            JOptionPane.showMessageDialog(frame, "Connection Error");
         }
 
 
@@ -899,7 +912,7 @@ public class QcInterfaceView {
                 e.printStackTrace();
             }
         } else {
-            JOptionPane.showMessageDialog(frame, "Please make sure the connection is connected");
+            JOptionPane.showMessageDialog(frame, "connection Error");
         }
 
     }
@@ -961,7 +974,7 @@ public class QcInterfaceView {
                 });
                 readMessage.start();
             } else {
-                JOptionPane.showMessageDialog(frame, "Please make sure the connection is connected");
+                JOptionPane.showMessageDialog(frame, "connection Error");
             }
         }
 
@@ -1003,9 +1016,9 @@ public class QcInterfaceView {
                                 contents[idx] = '\0';
                                 byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(new String(contents));
                                 img = ImageIO.read(new ByteArrayInputStream(imageBytes));
+                                //img = ImageIO.read( new URL( "/home/ur/Downloads/test.jpg" ) );
                                 //ImageIO.write(img, "jpg", new File("/home/ur/Desktop/NEW ur cap/check/src/main/resources/out.jpg"));
                                 img2 = deepCopy(img);
-
                                 final Border border = BorderFactory.createLineBorder(Color.black, 3);
                                 colorImagePanel = new ColorImagePanel(img);
                                 colorImagePanel.setBounds(5, 5, 640, 480);
@@ -1049,7 +1062,9 @@ public class QcInterfaceView {
         Thread change= new Thread(new Runnable() {
             @Override
             public void run() {
-        img = deepCopy(img2);
+                while(threadRunning);
+                threadRunning=true;
+                img = deepCopy(img2);
         colorImagePanel.image = deepCopy(img2);
         for (int x = 0; x < colorImagePanel.image.getWidth(); x++) {
             for (int y = 0; y < colorImagePanel.image.getHeight(); y++) {
@@ -1063,17 +1078,17 @@ public class QcInterfaceView {
                 Ll = sliderLl.getValue();
                 if ((H >= Hl && H <= Hu) && (S >= Sl && S <= Su) && (L >= Ll && L <= Lu)) {
                     colorImagePanel.image.setRGB(x, y, color.getRGB());
-                    colorImagePanel.repaint();
-                    colorImagePanel.revalidate();
+
                 } else {
                     int rgb = new Color(0, 0, 0).getRGB();
                     colorImagePanel.image.setRGB(x, y, rgb);
-                    colorImagePanel.repaint();
-                    colorImagePanel.revalidate();
+//                    colorImagePanel.repaint();
+                    //colorImagePanel.revalidate();
                 }
             }
         }
-
+                colorImagePanel.repaint();
+                colorImagePanel.revalidate();
         Hl = Hl / 2;
         Hu = Hu / 2;
 
@@ -1082,6 +1097,7 @@ public class QcInterfaceView {
 
         });
         change.start();
+        threadRunning = false;
 
     }
 

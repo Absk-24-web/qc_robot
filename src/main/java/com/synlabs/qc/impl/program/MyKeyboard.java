@@ -42,14 +42,10 @@ public class MyKeyboard extends JFrame {
             }
             parent.add(panel[row]);
         }
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         dispose();
         parent.add(textField);
         textField.setText(String.valueOf(str.append("|")));
         add(parent);
-        setLocation(d.width / 2 - this.getSize().width / 2,
-                        d.height / 2 - this.getSize().height / 2);
         pack();
         setResizable(false);
         setVisible(true);
@@ -80,7 +76,7 @@ public class MyKeyboard extends JFrame {
             }
            // System.out.println(s);
             if ("BkSpc".equals(s)) {
-                if(str.length()!=0) {
+                if(str.length()!=1) {
                     int n = str.indexOf("|");
                     str.deleteCharAt(n - 1);
                     textField.setText(String.valueOf(str));
@@ -89,6 +85,7 @@ public class MyKeyboard extends JFrame {
                 str.deleteCharAt(str.length()-1);
                 s = str.toString();
                 interfaceView.confidencetxt.setText(s);
+                interfaceView.txt.setText(s);
                 dispose();
             } else if ("Space".equals(s)) {
                 int a = str.indexOf("|");
